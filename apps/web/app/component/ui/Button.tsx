@@ -1,6 +1,7 @@
 "use client"
 import React, { useEffect } from 'react'
 import { FiArrowRight } from "react-icons/fi"
+import { useRouter } from 'next/navigation';
 
 
 import {
@@ -10,9 +11,11 @@ import {
     animate,
 } from "framer-motion";
 
-function Button({title} : {
-    title: string
+function Button({title, place} : {
+    title: string,
+    place ?: string
 }) {
+    const router = useRouter();
     const COLORS_TOP = ["#13FFAA", "#1E67C6", "#CE84CF", "#DD335C"];
     const color = useMotionValue(COLORS_TOP[0]);
     const border = useMotionTemplate`1px solid ${color}`;
@@ -28,7 +31,12 @@ function Button({title} : {
     }, []);
 
     return (
-        <div><motion.button
+        <div
+        onClick={() => {
+            {place != "" &&  router.push(`/${place}`)}
+        }}
+        >
+            <motion.button
             style={{
                 border,
                 boxShadow,
@@ -41,7 +49,7 @@ function Button({title} : {
             }}
             className="group relative cursor-pointer flex w-fit items-center gap-1.5 rounded-full bg-gray-950/10 px-4 py-2 text-gray-50 transition-colors hover:bg-gray-950/50"
         >
-            Start free trial
+            {title}
             <FiArrowRight className="transition-transform group-hover:-rotate-45 group-active:-rotate-12" />
         </motion.button>
 

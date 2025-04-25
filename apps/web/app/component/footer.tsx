@@ -7,7 +7,7 @@ import { FaFileContract, FaUserSecret, FaLinkedin, FaXTwitter, FaCode } from 're
 function Footer() {
     return (
         <div>
-            <div className='text-white bg-black  mt-10 p-10 rounded-xl w-[1500px] "}'>
+            <div className='text-white bg-black  mt-10 p-10  rounded-t-2xl w-[1500px] "}'>
                 <div className='flex justify-between '>
                     <div className='flex gap-2'>
                         <div className='flex flex-col justify-center'><VscTerminalUbuntu size={50} /></div>
@@ -21,7 +21,7 @@ function Footer() {
                         </div>
                     </div>
                 </div>
-                <p className="h-0.5 my-7 bg-neutral-900 w-full"></p>
+                <p className="h-0.5 my-7 bg-neutral-800 w-full"></p>
 
                 <div className="flex justify-between items-center text-neutral-500 text-sm py-4 px-6 ">
                     <div className="flex gap-4">

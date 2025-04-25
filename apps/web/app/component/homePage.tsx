@@ -24,7 +24,7 @@ function HomePage() {
             Meet Exa, your intelligent research assistant that turns complex prompts into powerful insights—instantly.
           </p>
           <div className='mt-10'>
-            <Button title='Get Started' />
+            <Button title='Get Started' place="dashboard"/>
           </div>
           <div className='mt-12'>
           <Hori/>

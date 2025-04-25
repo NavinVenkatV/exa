@@ -25,10 +25,10 @@ export default function Home() {
 
   return (
     <main>
-      <div className="bg-gradient-to-b py-4 from-blue-950 via-black to-black w-full h-auto">
+      <div className="bg-gradient-to-b from-blue-950 via-black to-black w-full h-auto">
         <HomePage />
       </div>
-      <div className="bg-gradient-to-b to-blue-950 from-black py-2">
+      <div className="bg-gradient-to-b to-blue-950 from-black">
         <div className="flex justify-center">
           <Pricing />
         </div>

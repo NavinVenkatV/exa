@@ -1,14 +1,20 @@
+"use client"
 import React from 'react'
 import { VscTerminalUbuntu } from 'react-icons/vsc'
-import Button from './ui/Button'
-
+import { useRouter } from 'next/navigation'
 
 function Nav() {
+    const router = useRouter();
     return (
         <nav className='flex justify-between bg-gradient-to-r from-black to-neutral-800 p-2 rounded-xl'>
             <div className='flex gap-2'>
-                <div className='flex gap-3'>
-                    <div className='flex flex-col justify-center'><VscTerminalUbuntu size={40} /></div>
+                <div 
+                onClick={() => {
+                    router.push('/')
+                }}
+                className='flex gap-3 cursor-pointer'>
+                    <div
+                     className='flex flex-col justify-center'><VscTerminalUbuntu size={40} /></div>
                     <p className='flex flex-col justify-center text-3xl'>Exa</p>
                     <a className='flex items-center text-sm p-1 mt-1 rounded-full text-white  cursor-pointer'>Powered By <span className='font-bold pl-1'>exa.ai</span></a>
                 </div>
