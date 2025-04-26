@@ -9,17 +9,19 @@ const exa = new Exa(process.env.EXA_API_KEY)
 
 //accepting user prompt and sending to exa api & recieving result
 export async function POST(req: NextRequest) {
-    const session = await getServerSession(authOptions)
-    const userEmail = session?.user?.email;
+    // const session = await getServerSession(authOptions)
+    // const userEmail = session?.user?.email;
 
-    if (!session || !userEmail) {
-        return NextResponse.json({ msg: "UnAuthorised" }, { status: 401 })
-    }
+    // if (!session || !userEmail) {
+    //     return NextResponse.json({ msg: "UnAuthorised" }, { status: 401 })
+    // }
 
     const { prompt } = await req.json();
     if (!prompt) {
         return NextResponse.json({ msg: "Prompt required" }, { status: 400 })
     }
+
+    return NextResponse.json({msg : "here is your response"})
 
     //FInding User
     const user = await prisma.user.findUnique({
