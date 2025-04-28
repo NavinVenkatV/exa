@@ -44,9 +44,20 @@ const Loading = () => {
   );
 };
 
+type QueryItem =
+  { type: "user"; text: string } |
+  {
+    type: "llm"; text: {
+      title: string; url: string;
+      text: string; author: string; reference: String; image: any
+    }[]
+  };
+
+
 function page() {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
   const [greeting, setGreeting] = useState("");
-  const [query, setQuery] = useState([]); // Changed to array of objects
+  const [query, setQuery] = useState<QueryItem[]>([]); // Changed to array of objects
   const [input, setInput] = useState("");
   const [showChatUi, setChatUi] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -70,23 +81,22 @@ function page() {
       const res = await axios.post("/exa", {
         prompt: input,
       });
-      console.log("LLM RESPONSE", res);
-      return res.data.msg;
+      console.log("LLM RESPONSE", res.data.result.results);
+      return res.data.result.results;
+
     } catch (e) {
       return "Something went wrong!";
     }
   };
 
-  // Handle prompt submission
   const handlePromptSubmit = async () => {
     if (input.trim() !== "") {
+      setChatUi(true);
       //@ts-ignore
       setQuery((prev) => [...prev, { text: input, type: "user" }]);
-      setLoading(true); // Start loading
+      setLoading(true);
       const res = await llm();
       setInput("");
-      setChatUi(true);
-      // Render loading for 3 seconds, then show result
       setTimeout(() => {
         //@ts-ignore
         setQuery((prev) => [...prev, { text: res, type: "llm" }]);
@@ -95,18 +105,44 @@ function page() {
     }
   };
 
+  function renderTextWithLinks(text: string) {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.split(urlRegex).map((part, index) => {
+      if (part.match(urlRegex)) {
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-400 cursor-pointer underline break-words"
+          >
+            {part}
+          </a>
+        );
+      } else {
+        return <span key={index}>{part}</span>;
+      }
+    });
+  }
+  function cleanText(text: string) {
+    const cleanedText = text.replace(/[#\$]/g, '');
+    return cleanedText;
+  }
+  
+
   return (
     <div
-      className={`w-full px-10 py-5 min-h-screen bg-gradient-to-b from-blue-950 via-black to-black text-white ${spaceGrotesk.className}`}
+      className={`w-full px-10 py-5 min-h-screen overflow-hidden bg-gradient-to-b from-blue-950 via-black to-black text-white ${spaceGrotesk.className}`}
     >
       <Nav />
       <div className="flex justify-center w-full h-full">
-        <div className="flex flex-col items-center justify-start mt-24 h-full w-full pb-40">
-          <div className="text-center w-full">
+        <div className="flex flex-col justify-start mt-24 h-full w-full pb-40">
+          <div className="w-full">
             {!showChatUi && (
               <>
-                <h1 className="text-5xl">{greeting}, Navin</h1>
-                <p className="text-2xl text-neutral-500">
+                <h1 className="text-5xl text-center mt-10">{greeting}, Navin</h1>
+                <p className="text-2xl text-center mb-10 text-neutral-500">
                   How can I help you today?
                 </p>
               </>
@@ -115,55 +151,58 @@ function page() {
               <div className="w-[1000px] bg-gradient-to-r from-black via-black to-blue-950 text-white px-4 py-2 rounded-xl mx-auto">
                 {query.map((item, index) => (
                   <div key={index} className="mb-4">
-                    <p
-                      className={`text-lg ${
-                        item.type === "user" ? "text-left" : "text-left"
-                      }`}
-                    >
-                      <span
-                        className={`inline-block p-2 rounded-lg ${
-                          item.type === "user" ? "" : ""
-                        }`}
-                      >
-                        {loading}
-                        {item.text}
-                      </span>
-                    </p>
+                    {item.type === "user" ? (
+                      <p className="text-left text-lg">{item.text}</p>
+                    ) : (
+                      <div className="flex flex-col gap-4">
+                        {item.text.map((res, i) => (
+                          <div key={i} className="flex justify-start mt-7 flex-col gap-2">
+                            <p className="text-3xl text-white">{res.title}</p>
+                              {res.image && <img src={res.image} alt="Image" className="w-auto h-[400px] mt-5 rounded-xl items-center flex justify-center object-cover" />}
+                            <div className="text-neutral-500 mt-4">
+                              {renderTextWithLinks(cleanText(res.text))}
+                            </div>
+                            <p className="text-sm text-neutral-400">By {res.author}</p>
+                            <a href={res.url} target="_blank" rel="noopener noreferrer" className="text-blue-400 underline">Reference</a>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     <div className="h-0.5 my-2 bg-neutral-800 w-full"></div>
                   </div>
                 ))}
+
                 {loading && <Loading />} {/* Render loading component */}
               </div>
             )}
           </div>
 
-          <div className="fixed bottom-0 left-0 w-full bg-black bg-opacity-80 py-5 px-10 flex flex-col items-center">
-            <div className="border w-[700px] pb-10 pt-4 px-4 border-neutral-700 rounded-xl">
-              <div className="flex gap-2">
+          <div className={`${showChatUi && 'fixed bottom-0 left-0 py-5 pt-12 '}w-full  bg-opacity-80  flex flex-col items-center`}>
+            <div className="border w-[700px] bg-neutral-900 py-2 p-4 border-neutral-700 rounded-xl">
+              <div className="flex items-center gap-2">
                 <input
                   onChange={(e) => setInput(e.target.value)}
                   value={input}
                   type="text"
                   placeholder="What do you want to know?"
-                  className="focus:outline-none w-full h-full bg-transparent text-white"
+                  className="focus:outline-none w-full h-full text-white"
                   onKeyPress={(e) => {
                     if (e.key === "Enter") handlePromptSubmit();
                   }}
                 />
                 <span
                   onClick={handlePromptSubmit}
-                  className={`w-7 h-7 rounded-full flex justify-center items-center ${
-                    input !== ""
-                      ? "bg-white cursor-pointer hover:-translate-y-0.5 transition-all duration-200 ease-in-out"
-                      : "bg-neutral-800 cursor-not-allowed"
-                  }`}
+                  className={`w-7 h-7 rounded-full flex justify-center items-center ${input !== ""
+                    ? "bg-white cursor-pointer hover:-translate-y-0.5 transition-all duration-200 ease-in-out"
+                    : "bg-neutral-800 cursor-not-allowed"
+                    }`}
                 >
                   <FaArrowUp color="black" />
                 </span>
               </div>
             </div>
 
-            <div className="mt-5 text-black text-center items-center justify-center flex flex-wrap gap-4">
+            {/* <div className="mt-5 text-black text-center items-center justify-center flex flex-wrap gap-4">
               <div className="bg-white flex items-center gap-2 p-3 rounded-xl cursor-pointer hover:bg-neutral-200 transition-all duration-150 ease-in-out">
                 <FaSearch />
                 <span>Research</span>
@@ -176,7 +215,7 @@ function page() {
                 <GrMagic />
                 <span>Edit Image</span>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

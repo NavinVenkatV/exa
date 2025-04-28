@@ -5,7 +5,6 @@ import Button from './ui/Button'
 import Nav from './nav'
 import Image from './image'
 import Hori from './hori'
-import Pricing from './pricing'
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin']

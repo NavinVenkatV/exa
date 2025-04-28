@@ -21,95 +21,88 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ msg: "Prompt required" }, { status: 400 })
     }
 
-    return NextResponse.json({msg : "here is your response"})
 
     //FInding User
-    const user = await prisma.user.findUnique({
-        where: {
-            email: userEmail
-        }
-    })
-    if (!user) {
-        return NextResponse.json({ msg: "User Not Found" }, { status: 401 })
-    }
+    // const user = await prisma.user.findUnique({
+    //     where: {
+    //         email: "vnavinvenkat@gmail.com"
+    //     }
+    // })
+    // if (!user) {
+    //     return NextResponse.json({ msg: "User Not Found" }, { status: 401 })
+    // }
 
     try {
-        //getting result from exa api
         const result = await exa.searchAndContents(
             prompt, {
-            text: { "maxCharacters": 1000 }
+            text: { "maxCharacters": 500 }
+        })
+        
+        return NextResponse.json({ 
+            message: "Created new chat",
+            result: result
         })
 
-        //Format the result into a string
-        const formattedResult = result.results.map(r => r.text).join('\n\n');
+        // const lastChat = await prisma.chat.findFirst({
+        //     where: {
+        //         userId: user.id,
+        //     },
+        //     orderBy: {
+        //         createdAt: 'desc',
+        //     },
+        // });
 
-        //Finding if users last Chat
-        const lastChat = await prisma.chat.findFirst({
-            where: {
-                userId: user.id,
-            },
-            orderBy: {
-                createdAt: 'desc',
-            },
-        });
+        // const isFreshChat = !lastChat ||
+        //     (new Date().getTime() - new Date(lastChat.updatedAt).getTime()) > 15 * 60 * 1000
 
-        //Finding is user is starting fresh prompt 
-        const isFreshChat = !lastChat ||
-            (new Date().getTime() - new Date(lastChat.updatedAt).getTime()) > 15 * 60 * 1000
+        // if (!isFreshChat) {
+        //     await prisma.messages.create({
+        //         data: {
+        //             chatId: lastChat.id,
+        //             content: result,
+        //             sender: "ai"
+        //         }
+        //     })
 
-        if (!isFreshChat) {
-            // Add messages to existing chat
-            await prisma.messages.create({
-                data: {
-                    chatId: lastChat.id,
-                    content: formattedResult,
-                    sender: "ai"
-                }
-            })
+        //     await prisma.messages.create({
+        //         data: {
+        //             chatId: lastChat.id,
+        //             content: prompt,
+        //             sender: "user"
+        //         }
+        //     })
 
-            await prisma.messages.create({
-                data: {
-                    chatId: lastChat.id,
-                    content: prompt,
-                    sender: "user"
-                }
-            })
+        //     return NextResponse.json({ 
+        //         message: "Added to existing chat",
+        //         result: formattedResult
+        //     })
 
-            return NextResponse.json({ 
-                message: "Added to existing chat",
-                chatId: lastChat.id 
-            })
+        // } else {
+        //     const newChat = await prisma.chat.create({
+        //         data: {
+        //             userId: user.id,
+        //             query: prompt
+        //         }
+        //     })
 
-        } else {
-            // Create new chat and add messages
-            const newChat = await prisma.chat.create({
-                data: {
-                    userId: user.id,
-                    query: prompt
-                }
-            })
+        //     await prisma.messages.create({
+        //         data: {
+        //             chatId: newChat.id,
+        //             content: formattedResult,
+        //             sender: "ai"
+        //         }
+        //     })
 
-            await prisma.messages.create({
-                data: {
-                    chatId: newChat.id,
-                    content: formattedResult,
-                    sender: "ai"
-                }
-            })
+        //     await prisma.messages.create({
+        //         data: {
+        //             chatId: newChat.id,
+        //             content: prompt,
+        //             sender: "user"
+        //         }
+        //     })
 
-            await prisma.messages.create({
-                data: {
-                    chatId: newChat.id,
-                    content: prompt,
-                    sender: "user"
-                }
-            })
-
-            return NextResponse.json({ 
-                message: "Created new chat",
-                chatId: newChat.id 
-            })
-        }
+           
+        // }
     } catch (e) {
 
         console.error("Error in exa route:", e)
