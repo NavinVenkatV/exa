@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import Exa from "exa-js";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../lib/auth";
-import { prisma } from "@repo/db";
+// import { getServerSession } from "next-auth";
+// import { authOptions } from "../lib/auth";
+// import { prisma } from "@repo/db";
 
 const exa = new Exa(process.env.EXA_API_KEY)
 // console.log(exa)
