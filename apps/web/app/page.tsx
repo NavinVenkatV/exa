@@ -25,7 +25,7 @@ export default function Home() {
 
   return (
     <main>
-      <div className="bg-gradient-to-b from-blue-950 via-black to-black w-full h-auto">
+      <div className="bg-gradient-to-b from-blue-950 relative z-0 via-black to-black w-full h-auto">
         <HomePage />
       </div>
       <div className="bg-gradient-to-b to-blue-950 from-black">

@@ -1,6 +1,10 @@
 {
   "extends": "@repo/typescript-config/nextjs.json",
   "compilerOptions": {
+    "baseUrl": ".",                       // 👈 Required for paths to work
+    "paths": {
+      "@/*": ["./src/*"]                 // 👈 Import alias for "@/..." (adjust if you're not using /src)
+    },
     "plugins": [
       {
         "name": "next"
@@ -16,6 +20,5 @@
   ],
   "exclude": [
     "node_modules"
-  ],
-  
+  ]
 }

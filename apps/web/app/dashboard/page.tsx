@@ -2,12 +2,13 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { Space_Grotesk } from "next/font/google";
-import Nav from "../component/nav";
-import { FaSearch } from "react-icons/fa";
-import { GiWorld } from "react-icons/gi";
-import { GrMagic } from "react-icons/gr";
+import Nav from "app/component/nav";
+// import { FaSearch } from "react-icons/fa";
+// import { GiWorld } from "react-icons/gi";
+// import { GrMagic } from "react-icons/gr";
 import { FaArrowUp } from "react-icons/fa6";
 import axios from "axios";
+
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -49,13 +50,12 @@ type QueryItem =
   {
     type: "llm"; text: {
       title: string; url: string;
-      text: string; author: string; reference: String; image: any
+      text: string; author: string; reference: String; image: any; publishedDate: string
     }[]
   };
 
 
-function page() {
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
+function Child() {
   const [greeting, setGreeting] = useState("");
   const [query, setQuery] = useState<QueryItem[]>([]); // Changed to array of objects
   const [input, setInput] = useState("");
@@ -129,11 +129,16 @@ function page() {
     const cleanedText = text.replace(/[#\$]/g, '');
     return cleanedText;
   }
-  
+
+  function CleanDate(text: string) {
+    const format = new Date(text);
+    return format.toString();
+  }
+
 
   return (
     <div
-      className={`w-full px-10 py-5 min-h-screen overflow-hidden bg-gradient-to-b from-blue-950 via-black to-black text-white ${spaceGrotesk.className}`}
+      className={`w-full h-screen px-10 py-5  overflow-hidden bg-gradient-to-b from-blue-950 via-black to-black text-white ${spaceGrotesk.className}`}
     >
       <Nav />
       <div className="flex justify-center w-full h-full">
@@ -158,11 +163,14 @@ function page() {
                         {item.text.map((res, i) => (
                           <div key={i} className="flex justify-start mt-7 flex-col gap-2">
                             <p className="text-3xl text-white">{res.title}</p>
-                              {res.image && <img src={res.image} alt="Image" className="w-auto h-[400px] mt-5 rounded-xl items-center flex justify-center object-cover" />}
+                            {res.image && <img src={res.image} alt="Image" className="w-auto h-[400px] mt-5 rounded-xl items-center flex justify-center object-cover" />}
                             <div className="text-neutral-500 mt-4">
                               {renderTextWithLinks(cleanText(res.text))}
                             </div>
-                            <p className="text-sm text-neutral-400">By {res.author}</p>
+                            <div className="w-full flex justify-between items-center"> 
+                              <p className="text-sm text-neutral-400">By {res.author}</p>
+                              <p className="text-neutral-500 text-sm"><span className="text-white">Published:</span> {CleanDate(res.publishedDate)}</p>
+                            </div>
                             <a href={res.url} target="_blank" rel="noopener noreferrer" className="text-blue-400 underline">Reference</a>
                           </div>
                         ))}
@@ -223,4 +231,4 @@ function page() {
   );
 }
 
-export default page;
+export default Child;
