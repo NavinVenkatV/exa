@@ -1,5 +1,5 @@
 {
-  "name": "exa",
+  "name": "exa" ,
   "private": true,
   "scripts": {
     "build": "turbo run build",
