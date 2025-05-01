@@ -27,20 +27,14 @@ const item3 = [
 function Pricing() {
   return (
     <div className="relative rounded-2xl w-full max-w-[1400px] mx-auto text-white py-10 overflow-hidden">
-      
-      <img
-        src="/gradi.png"
-        alt="gradient"
-        className="absolute inset-0 w-full h-full object-cover z-0 opacity-60"
-      />
 
       <div className="relative z-10">
         <div className="flex justify-center items-center text-center">
           <div>
-            <div className="text-5xl ">
+            <div className="text-xl md:text-5xl ">
             Simple plans. No hidden fees.
             </div>
-            <p className="mt-3 text-neutral-500">
+            <p className="mt-3 text-sm md:text-md text-neutral-500">
               Choose the perfect plan for your needs. No hidden fees.
             </p>
           </div>

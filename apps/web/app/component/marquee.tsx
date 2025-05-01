@@ -40,7 +40,7 @@ function Marquee({from, to} : Typess) {
         className="flex flex-shrink-0"
       >
         {uMarquee.map((image, index) => {
-          return <img className="h-40 w-56 pr-20" src={image} key={index} />;
+          return <img className="h-36 w-48 pr-20" src={image} key={index} />;
         })}
       </motion.div>
 
@@ -51,7 +51,7 @@ function Marquee({from, to} : Typess) {
         className="flex flex-shrink-0"
       >
         {uMarquee.map((image, index) => {
-          return <img className="h-40 w-56 pr-20" src={image} key={index} />;
+          return <img className="h-36 w-48 pr-20" src={image} key={index} />;
         })}
       </motion.div>
     </div>

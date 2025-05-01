@@ -52,6 +52,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, token }) {
       if (session.user) {
+        //@ts-ignore
         session.user.id = token.id as string;
         session.user.image = token.picture as string;
       }

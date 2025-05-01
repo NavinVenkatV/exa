@@ -24,7 +24,7 @@ export default function Hori() {
     return (
         <div className=" text-white">
             <div className="justify-center items-center space-x-4">
-                <h1 className="text-2xl text-center mt-4">
+                <h1 className="text-xl md:text-2xl text-center mt-4">
                     Trusted By
                 </h1>
                 <div className="">

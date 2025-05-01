@@ -10,18 +10,18 @@ interface Typess {
 
 function PriceBox({ title1, title2, context, price }: Typess) {
     return (
-        <div className={`text-white border-1 bg-black border-black ${title1 === "Premium" && 'border-orange-700 border-3'} mt-10 p-10 rounded-xl w-[400px] h-[400px]"}`}>
+        <div className={`text-white border-1 bg-black border-black ${title1 === "Premium" && 'border-orange-700 border-3'} mt-10 p-10 rounded-xl w-[250px] md:w-[400px] h-auto md:h-[400px]"}`}>
             <div className="flex justify-between">
                 <p className="text-neutral-500 text-xl">{title1}</p>
-                {title1 === 'Premium' && <p className="bg-neutral-800 px-2 rounded-full flex items-center text-sm font-bold">Recommended</p>}
+                {title1 === 'Premium' && <p className="bg-neutral-800 hidden md:flex px-2 rounded-full  items-center text-sm font-bold">Recommended</p>}
             </div>
             <p className="text-sm mt-3 ">{title2}</p>
             <div className="mt-7">
                 <div className="flex justify-between items-center">
-                    <p className="text-5xl">{price}</p>
+                    <p className="text-3xl md:text-5xl">{price}</p>
                     <div className="shrink-0">
                         <button
-                            className="bg-white px-4 py-2 rounded-full text-black text-base cursor-pointer
+                            className="bg-white px-2 md:px-4 py-1  md:py-2 rounded-full text-black text-base cursor-pointer
                  hover:-translate-y-0.5 transition-all duration-200 ease-in-out"
                         >
                             Buy Plan
